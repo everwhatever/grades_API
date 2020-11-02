@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 class AddGrade
 {
 
-    private $formFactory;
+    private FormFactoryInterface $formFactory;
 
     public function __construct(FormFactoryInterface $formFactory)
     {
@@ -19,7 +19,7 @@ class AddGrade
         $this->formFactory = $formFactory;
     }
 
-    public function addGrade($request)
+    public function addGrade($request): Grade
     {
         $grade = new Grade();
 
@@ -29,7 +29,7 @@ class AddGrade
         return $grade;
     }
 
-    private function proccesForm($request, $form)
+    private function proccesForm($request, $form): void
     {
         $data = json_decode($request->getContent(), true);
         $form->submit($data);

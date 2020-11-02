@@ -9,15 +9,16 @@ use App\Service\DisplayGrades;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GradesController extends AbstractController
 {
 
 
-    private $entityManager;
-    private $addGrade;
-    private $displayGrades;
+    private EntityManagerInterface $entityManager;
+    private AddGrade $addGrade;
+    private DisplayGrades $displayGrades;
 
     public function __construct(EntityManagerInterface $entityManager, AddGrade $addGrade, DisplayGrades $displayGrades)
     {
@@ -32,7 +33,7 @@ class GradesController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route("/grades", methods={"POST"})
      */
-    public function addGradeAction(Request $request)
+    public function addGradeAction(Request $request): Response
     {
         $grade = $this->addGrade->addGrade($request);
 
@@ -47,7 +48,7 @@ class GradesController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @Route("/grades", methods={"GET"})
      */
-    public function displayGradesAction(Request $request)
+    public function displayGradesAction(Request $request): Response
     {
         $grades = $this->displayGrades->displayGrades($request, $this->entityManager);
 

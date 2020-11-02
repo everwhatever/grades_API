@@ -10,7 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DisplayGrades
 {
-    public function displayGrades(Request $request, EntityManagerInterface $entityManager)
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return array
+     */
+    public function displayGrades(Request $request, EntityManagerInterface $entityManager): array
     {
         $data = json_decode($request->getContent(), true);
         $filter = $data['filter'];
@@ -19,7 +24,12 @@ class DisplayGrades
         return $this->filterGrades($filter, $repository);
     }
 
-    private function filterGrades($filter, $repository)
+    /**
+     * @param $filter
+     * @param $repository
+     * @return array
+     */
+    private function filterGrades($filter, $repository): array
     {
         if ($filter == null) {
 
