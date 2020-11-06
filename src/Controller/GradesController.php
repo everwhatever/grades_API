@@ -4,53 +4,45 @@
 namespace App\Controller;
 
 
-use App\Service\AddGrade;
-use App\Service\DisplayGrades;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\GradeCreator;
+use App\Service\GradesFeature;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GradesController extends AbstractController
 {
 
+    private GradeCreator $gradeCreator;
+    private GradesFeature $gradesFeature;
 
-    private EntityManagerInterface $entityManager;
-    private AddGrade $addGrade;
-    private DisplayGrades $displayGrades;
-
-    public function __construct(EntityManagerInterface $entityManager, AddGrade $addGrade, DisplayGrades $displayGrades)
+    public function __construct(GradeCreator $gradeCreator, GradesFeature $gradesFeature)
     {
-
-        $this->entityManager = $entityManager;
-        $this->addGrade = $addGrade;
-        $this->displayGrades = $displayGrades;
+        $this->gradeCreator = $gradeCreator;
+        $this->gradesFeature = $gradesFeature;
     }
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      * @Route("/grades", methods={"POST"})
      */
-    public function addGradeAction(Request $request): Response
+    public function addGradeAction(Request $request): JsonResponse
     {
-        $grade = $this->addGrade->addGrade($request);
-
-        $this->entityManager->persist($grade);
-        $this->entityManager->flush();
+        $grade = $this->gradeCreator->addGrade($request);
 
         return $this->json($grade);
     }
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      * @Route("/grades", methods={"GET"})
      */
-    public function displayGradesAction(Request $request): Response
+    public function displayGradesAction(Request $request): JsonResponse
     {
-        $grades = $this->displayGrades->displayGrades($request, $this->entityManager);
+        $grades = $this->gradesFeature->displayGrades($request);
 
         return $this->json($grades);
     }

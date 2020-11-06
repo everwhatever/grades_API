@@ -8,18 +8,25 @@ use App\Entity\Grade;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class DisplayGrades
+class GradesFeature
 {
+
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager){
+
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param Request $request
-     * @param EntityManagerInterface $entityManager
      * @return array
      */
-    public function displayGrades(Request $request, EntityManagerInterface $entityManager): array
+    public function displayGrades(Request $request): array
     {
         $data = json_decode($request->getContent(), true);
         $filter = $data['filter'];
-        $repository = $entityManager->getRepository(Grade::class);
+        $repository = $this->entityManager->getRepository(Grade::class);
 
         return $this->filterGrades($filter, $repository);
     }
@@ -31,7 +38,7 @@ class DisplayGrades
      */
     private function filterGrades($filter, $repository): array
     {
-        if ($filter == null) {
+        if ($filter === null) {
 
             return $repository->findBy([], ['grade' => 'DESC']);
         }
@@ -39,3 +46,4 @@ class DisplayGrades
         return $repository->findBy(['grade' => $filter]);
     }
 }
+
